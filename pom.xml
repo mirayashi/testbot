@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>me.mirayashi.testbot</groupId>
+    <artifactId>testbot</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>app</module>
+        <module>delivery</module>
+        <module>launcher</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>17</java.version>
+        <plugin.compiler.version>3.13.0</plugin.compiler.version>
+        <plugin.install.version>3.1.1</plugin.install.version>
+        <plugin.deploy.version>3.1.1</plugin.deploy.version>
+        <plugin.jlink.version>3.2.0</plugin.jlink.version>
+        <plugin.dependency.version>3.6.1</plugin.dependency.version>
+        <plugin.resources.version>3.3.1</plugin.resources.version>
+        <plugin.antrun.version>3.1.0</plugin.antrun.version>
+        <botrino.version>1.1.2</botrino.version>
+        <reactor.version>2020.0.33</reactor.version>
+        <logback.version>1.5.6</logback.version>
+        <delivery.name>runtime</delivery.name>
+        <delivery.directory>${project.build.directory}/${delivery.name}</delivery.directory>
+        <app.build.directory>${project.basedir}/../app/target</app.build.directory>
+        <jlink.jdk>${java.home}</jlink.jdk>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${plugin.compiler.version}</version>
+                    <configuration>
+                        <release>${java.version}</release>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${plugin.install.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${plugin.deploy.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jlink-plugin</artifactId>
+                    <version>${plugin.jlink.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <launcher>start=me.mirayashi.testbot.launcher/me.mirayashi.testbot.Launcher</launcher>
+                        <addModules>
+                            <addModule>java.logging</addModule>
+                            <addModule>jdk.unsupported</addModule>
+                            <addModule>java.xml</addModule>
+                            <addModule>java.naming</addModule>
+                            <addModule>java.desktop</addModule>
+                            <addModule>jdk.crypto.ec</addModule>
+                        </addModules>
+                        <sourceJdkModules>${jlink.jdk}</sourceJdkModules>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${plugin.resources.version}</version>
+                    <executions>
+                        <execution>
+                            <id>copy-resources</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${project.build.directory}/resources</outputDirectory>
+                                <propertiesEncoding>ISO-8859-1</propertiesEncoding>
+                                <resources>
+                                    <resource>
+                                        <directory>src/main/external-resources</directory>
+                                        <filtering>true</filtering>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${plugin.dependency.version}</version>
+                    <executions>
+                        <execution>
+                            <id>copy-dependencies</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>copy-dependencies</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>${plugin.antrun.version}</version>
+                    <executions>
+                        <execution>
+                            <id>antrun-archive</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>run</goal>
+                            </goals>
+                            <configuration>
+                                <target>
+                                    <delete dir="${delivery.directory}" />
+                                    <delete file="${project.build.directory}/${project.build.finalName}.zip" />
+                                    <move file="${project.build.directory}/maven-jlink/default"
+                                          tofile="${delivery.directory}" force="true" />
+                                    <copy todir="${delivery.directory}/modules">
+                                        <fileset dir="${app.build.directory}/dependency" />
+                                        <fileset file="${app.build.directory}/*.jar" />
+                                    </copy>
+                                    <copy todir="${delivery.directory}">
+                                        <fileset dir="${app.build.directory}/resources" />
+                                    </copy>
+                                    <zip basedir="${delivery.directory}/.." includes="${delivery.name}/**/*" destfile="${delivery.directory}.zip" />
+                                </target>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-bom</artifactId>
+                <version>${reactor.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alex1304.botrino</groupId>
+                <artifactId>botrino-api</artifactId>
+                <version>${botrino.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alex1304.botrino</groupId>
+                <artifactId>botrino-interaction</artifactId>
+                <version>${botrino.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

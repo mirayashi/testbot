@@ -1,0 +1,42 @@
+name: testbot
+version: 0.1.0
+tee: tdx
+kind: container
+resources:
+  memory: 512
+  cpus: 1
+  storage:
+    kind: disk-persistent
+    size: 512
+artifacts:
+  firmware: https://github.com/oasisprotocol/oasis-boot/releases/download/v0.4.1/ovmf.tdx.fd#db47100a7d6a0c1f6983be224137c3f8d7cb09b63bb1c7a5ee7829d8e994a42f
+  kernel: https://github.com/oasisprotocol/oasis-boot/releases/download/v0.4.1/stage1.bin#06e12cba9b2423b4dd5916f4d84bf9c043f30041ab03aa74006f46ef9c129d22
+  stage2: https://github.com/oasisprotocol/oasis-boot/releases/download/v0.4.1/stage2-podman.tar.bz2#6f2487aa064460384309a58c858ffea9316e739331b5c36789bb2f61117869d6
+  container:
+    runtime: https://github.com/oasisprotocol/oasis-sdk/releases/download/rofl-containers%2Fv0.4.2/rofl-containers#0cbaa4c0c1b35c5ed41156868bee9f3726f52eeedc01b3060d3b2eb67d76f546
+    compose: docker-compose.yml
+deployments:
+  default:
+    app_id: rofl1qpuqlq8uyqp33q6y4n2nzy0rfjpg0l9pqsq4uxpg
+    network: testnet
+    paratime: sapphire
+    admin: test
+    trust_root:
+      height: 26401651
+      hash: 970b7dcb52615ffcef4d282e8c3ce3668349b51705603f67e30ec6481519d429
+    policy:
+      quotes:
+        pcs:
+          tcb_validity_period: 30
+          min_tcb_evaluation_data_number: 18
+          tdx: {}
+      enclaves:
+        - c/uxosQC9MnTBsHxhkThR6eMR0SSMP30LzVMdvNQs1IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+        - 5BdQ11WP2sqNsl+zSzLLGY5Mp5XhZm4RtSVQ36nj+DYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+      endorsements:
+        - any: {}
+      fees: endorsing_node
+      max_expiration: 3
+    secrets:
+      - name: BOT_TOKEN
+        value: pGJwa1ggjnEx1kzoUVRdtj2vsetH8BWN/EwZBxKdIh4tiOJx1jtkbmFtZVgZAW2dUcFBDhbnpJLN3GE4iz3YUV3osj3OqWVub25jZU/AuOFdKGnD1D9QN8O0bO5ldmFsdWVYWB7HpZEGRQnUJpazLATpd2dOvOgn2CW5yIbOoiRc26vRXuozq+SLzORcL0YFxMgrf5EN3+qMpZpn8hd5G0bodVIpHnTLomT5i9jocjLDAF+KckZlSxoO/hc=

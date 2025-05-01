@@ -1,0 +1,15 @@
+{
+    "bot": {
+        "token": "BOT_TOKEN",
+        "presence": {
+            "status": "online",
+            "activity_type": "playing",
+            "activity_text": "Hello world!"
+        },
+        "enabled_intents": 32509
+    },
+    "interaction": {
+        "application_commands_guild_id": null,
+        "default_ack_mode": "default"
+    }
+}

@@ -1,0 +1,7 @@
+services:
+  testbot:
+    build: .
+    image: "docker.io/mirayashi/testbot"
+    platform: linux/amd64
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
