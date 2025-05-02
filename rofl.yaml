@@ -21,6 +21,7 @@ deployments:
     network: testnet
     paratime: sapphire
     admin: test
+    oci_repository: ghcr.io/mirayashi/testbot:latest
     trust_root:
       height: 26401651
       hash: 970b7dcb52615ffcef4d282e8c3ce3668349b51705603f67e30ec6481519d429
@@ -40,3 +41,8 @@ deployments:
     secrets:
       - name: BOT_TOKEN
         value: pGJwa1ggjnEx1kzoUVRdtj2vsetH8BWN/EwZBxKdIh4tiOJx1jtkbmFtZVgZAW2dUcFBDhbnpJLN3GE4iz3YUV3osj3OqWVub25jZU/AuOFdKGnD1D9QN8O0bO5ldmFsdWVYWB7HpZEGRQnUJpazLATpd2dOvOgn2CW5yIbOoiRc26vRXuozq+SLzORcL0YFxMgrf5EN3+qMpZpn8hd5G0bodVIpHnTLomT5i9jocjLDAF+KckZlSxoO/hc=
+    machines:
+      default:
+        provider: oasis1qrxhk2aqwq7g5fq85a89yv2khdgn2wzccqhg2sal
+        offer: small
+        id: 000000000000000a
